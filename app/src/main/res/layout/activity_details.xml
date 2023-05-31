@@ -28,42 +28,14 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         android:id="@+id/recyclerview" />
 
-    <LinearLayout
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom|right">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_list_number"
-            android:id="@+id/fab_add_number"
-            app:fabSize="mini"
-            android:visibility="gone"/>
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_plus"
-            android:id="@+id/fab_add"
-            app:fabSize="mini"
-            android:visibility="gone"/>
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_calendar"
-            android:id="@+id/fab_main" />
-
-    </LinearLayout>
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_calendar"
+        android:layout_gravity="bottom|right"
+        android:id="@+id/fab" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

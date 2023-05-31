@@ -8,6 +8,6 @@ public class GloApplication extends Application {
     public void onCreate() {
         super.onCreate();
         // TODO: Implement this method
-        DynamicColors.applyToActivitiesIfAvailable(this);
+      //  DynamicColors.applyToActivitiesIfAvailable(this);
     }
 }

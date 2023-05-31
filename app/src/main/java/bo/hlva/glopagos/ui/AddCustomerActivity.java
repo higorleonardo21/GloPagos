@@ -4,15 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 import bo.hlva.glopagos.data.model.Customer;
 import bo.hlva.glopagos.databinding.ActivityAddCustomerBinding;
+import bo.hlva.glopagos.utils.Utils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 // import com.itsaky.androidide.logsender.LogSender;
 
 public class AddCustomerActivity extends AppCompatActivity {
 
     private ActivityAddCustomerBinding binding;
+
+    private String selectAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,22 @@ public class AddCustomerActivity extends AppCompatActivity {
 
         onFocusChanged();
 
+        // setup autocomplete
+
+        String[] list = {"200", "300", "400", "500", "600", "700", "800", "900", "1000"};
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
+        binding.autocomplete.setAdapter(adapter);
+        binding.autocomplete.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(
+                            AdapterView<?> parent, View view, int position, long id) {
+
+                        selectAmount = parent.getItemAtPosition(position).toString();
+                    }
+                });
+
         // click fab
         binding.fab.setOnClickListener(
                 v -> {
@@ -40,13 +62,19 @@ public class AddCustomerActivity extends AppCompatActivity {
                     String lastName = binding.edtLastname.getText().toString();
                     String idNumber = binding.edtIdNumber.getText().toString();
                     String phone = binding.edtPhone.getText().toString();
-                    String amount = binding.edtAmount.getText().toString();
 
-                    if (verifyInput(name, lastName, idNumber, phone, amount)) {
+                    if (verifyInput(name, lastName, idNumber, phone)) {
+                    
+                        String date = Utils.getCurrentDate();
 
                         Customer customer =
                                 new Customer(
-                                        name, lastName, idNumber, phone, Integer.valueOf(amount));
+                                        name,
+                                        lastName,
+                                        idNumber,
+                                        phone,
+                                        date,
+                                        Integer.valueOf(selectAmount));
 
                         showDialogSave(customer);
                     }
@@ -92,14 +120,9 @@ public class AddCustomerActivity extends AppCompatActivity {
                 (__, focused) -> {
                     if (focused) binding.layoutPhone.setError("");
                 });
-        binding.edtAmount.setOnFocusChangeListener(
-                (__, focused) -> {
-                    if (focused) binding.layoutAmount.setError("");
-                });
     }
 
-    private boolean verifyInput(
-            String name, String lastName, String idNumber, String phone, String amount) {
+    private boolean verifyInput(String name, String lastName, String idNumber, String phone) {
 
         if (TextUtils.isEmpty(name)) {
             binding.layoutName.setError("Campo Vacio");
@@ -112,9 +135,6 @@ public class AddCustomerActivity extends AppCompatActivity {
             return false;
         } else if (TextUtils.isEmpty(phone)) {
             binding.layoutPhone.setError("Campo Vacio");
-            return false;
-        } else if (TextUtils.isEmpty(amount)) {
-            binding.layoutAmount.setError("");
             return false;
         }
 

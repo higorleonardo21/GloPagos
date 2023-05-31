@@ -25,17 +25,22 @@ public class Customer implements Serializable {
     @ColumnInfo(name = "phone")
     private String phone;
 
+    @ColumnInfo(name = "date")
+    private String date;
+
     @ColumnInfo(name = "amount")
     private int amount;
 
     @ColumnInfo(name = "days")
     private ArrayList<Day> days;
 
-    public Customer(String name, String lastName, String idNumber, String phone, int amount) {
+    public Customer(
+            String name, String lastName, String idNumber, String phone, String date, int amount) {
         this.name = name;
         this.lastName = lastName;
         this.idNumber = idNumber;
         this.phone = phone;
+        this.date = date;
         this.amount = amount;
         this.days = new ArrayList<>();
     }
@@ -94,5 +99,13 @@ public class Customer implements Serializable {
 
     public void setDays(ArrayList<Day> days) {
         this.days = days;
+    }
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
