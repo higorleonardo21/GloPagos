@@ -31,17 +31,27 @@ public class Customer implements Serializable {
     @ColumnInfo(name = "amount")
     private int amount;
 
+    @ColumnInfo(name = "percentage")
+    private int percentage;
+
     @ColumnInfo(name = "days")
     private ArrayList<Day> days;
 
     public Customer(
-            String name, String lastName, String idNumber, String phone, String date, int amount) {
+            String name,
+            String lastName,
+            String idNumber,
+            String phone,
+            String date,
+            int amount,
+            int percentage) {
         this.name = name;
         this.lastName = lastName;
         this.idNumber = idNumber;
         this.phone = phone;
         this.date = date;
         this.amount = amount;
+        this.percentage = percentage;
         this.days = new ArrayList<>();
     }
 
@@ -107,5 +117,13 @@ public class Customer implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public int getPercentage() {
+        return this.percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
     }
 }

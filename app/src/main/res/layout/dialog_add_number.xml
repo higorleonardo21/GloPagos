@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingLeft="23dp"
+    android:paddingTop="10dp"
     android:paddingRight="23dp">
 
     <com.google.android.material.textfield.TextInputLayout

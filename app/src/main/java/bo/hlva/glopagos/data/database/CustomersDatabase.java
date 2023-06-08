@@ -1,15 +1,18 @@
 package bo.hlva.glopagos.data.database;
 
 import android.content.Context;
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import bo.hlva.glopagos.data.model.Customer;
 
 @Database(
         entities = {Customer.class},
-        version = 1,
+        version = 2,
         exportSchema = false)
 @TypeConverters(DataTypeConverter.class)
 public abstract class CustomersDatabase extends RoomDatabase {
@@ -28,6 +31,8 @@ public abstract class CustomersDatabase extends RoomDatabase {
                     INSTANCE =
                             Room.databaseBuilder(context, CustomersDatabase.class, DATABASE_NAME)
                                     .allowMainThreadQueries()
+                                    .addMigrations(MIGRATION_1_2)
+                                   // .fallbackToDestructiveMigration()
                                     .build();
                 }
             }
@@ -35,4 +40,13 @@ public abstract class CustomersDatabase extends RoomDatabase {
 
         return INSTANCE;
     }
+
+    static final Migration MIGRATION_1_2 =
+            new Migration(1, 2) {
+                @Override
+                public void migrate(SupportSQLiteDatabase database) {
+
+                    database.execSQL("ALTER TABLE customers ADD COLUMN percentage INTEGER NOT NULL DEFAULT 20");
+                }
+            };
 }

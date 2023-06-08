@@ -231,6 +231,9 @@ public class DetailsActivity extends AppCompatActivity {
                         + customer.getAmount()
                         + " bs"
                         + "\n\n"
+                        + "Porcentaje de Retiro:\n"
+                        + customer.getPercentage()
+                        + "\n\n"
                         + "Fecha de Retiro:\n"
                         + customer.getDate());
 

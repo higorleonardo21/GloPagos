@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:id="@+id/coordinator">
+
+    <com.google.android.material.appbar.AppBarLayout
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior"
+         android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
+         android:id="@+id/appbar">
+
+        <com.google.android.material.appbar.MaterialToolbar
+             android:layout_height="?attr/actionBarSize"
+             android:layout_width="match_parent"
+             android:background="?attr/colorPrimary"
+             app:popupTheme="@style/ThemeOverlay.Material3.Light"
+             android:id="@+id/toolbar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+         android:gravity="center"
+         android:layout_margin="25dp"
+         android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:hint="Correo"
+             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+             android:layout_marginTop="10dp"
+             android:id="@+id/layout_email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:maxLines="1"
+                 android:inputType="text"
+                 android:id="@+id/edt_email" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:hint="Contraseña"
+             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+             android:layout_marginTop="10dp"
+             android:id="@+id/layout_password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:maxLines="1"
+                 android:inputType="text"
+                 android:id="@+id/edt_password" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+             android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:layout_marginTop="15dp"
+             android:id="@+id/btn_login"
+             android:text="Iniciar Sesion" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
