@@ -198,7 +198,7 @@ public class DetailsActivity extends AppCompatActivity {
         builder.setMessage(
                 "Monto Total A Cancelar:\n"
                         + (customer.getAmount()
-                                + MathUtils.calculatePercentage(customer.getAmount()))
+                                + MathUtils.calculatePercentage(customer))
                         + " bs"
                         + "\n\n"
                         + "Monto Retirado:\n"
@@ -232,7 +232,7 @@ public class DetailsActivity extends AppCompatActivity {
                         + " bs"
                         + "\n\n"
                         + "Porcentaje de Retiro:\n"
-                        + customer.getPercentage()
+                        + customer.getPercentage() + "%"
                         + "\n\n"
                         + "Fecha de Retiro:\n"
                         + customer.getDate());

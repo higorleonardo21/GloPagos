@@ -137,8 +137,8 @@ public class AddCustomerActivity extends AppCompatActivity {
                         + customer.getAmount()
                         + " bs"
                         + "\n\n"
-                        + "Porcentage:\n"
-                        + "20%");
+                        + "Porcentaje:\n"
+                        + customer.getPercentage() + "%");
         builder.setPositiveButton(
                 "Guardar",
                 (v, view) -> {
