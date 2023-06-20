@@ -7,11 +7,15 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import bo.hlva.glopagos.data.model.Customer;
 import bo.hlva.glopagos.data.repo.CustomersRepository;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.util.List;
 
 public class CustomersViewModel extends ViewModel {
 
     private CustomersRepository repository;
+    private CompositeDisposable compositeDisposable;
 
     private MutableLiveData<Customer> _itemCustomer;
     private MutableLiveData<List<Customer>> _listCustomers;
@@ -19,38 +23,78 @@ public class CustomersViewModel extends ViewModel {
 
     public CustomersViewModel(Context context) {
         repository = new CustomersRepository(context);
+        compositeDisposable = new CompositeDisposable();
 
         _itemCustomer = new MutableLiveData<>();
         _listCustomers = new MutableLiveData<>();
         _listFilter = new MutableLiveData<>();
     }
 
-    public void addCustomer(Customer customer) {
-        repository.addCustomer(customer);
+    public void insertCustomer(Customer customer) {
+        compositeDisposable.add(
+                repository
+                        .insertCustomer(customer)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe());
     }
 
     public void updateCustomer(Customer customer) {
-        repository.updateCustomer(customer);
+        compositeDisposable.add(
+                repository
+                        .updateCustomer(customer)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe());
     }
 
     public void deleteCustomer(Customer customer) {
-        repository.deleteCustomer(customer);
+        compositeDisposable.add(
+                repository
+                        .deleteCustomer(customer)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe());
     }
 
     public LiveData<Customer> getItemCustomer(String id) {
-        _itemCustomer.setValue(repository.getItemCustomer(id));
+        compositeDisposable.add(
+                repository
+                        .getItemCustomer(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(customer -> _itemCustomer.setValue(customer)));
+
         return _itemCustomer;
     }
 
     public LiveData<List<Customer>> getListCustomers() {
-        _listCustomers.setValue(repository.getListCustomers());
+        compositeDisposable.add(
+                repository
+                        .getListCustomers()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(listCustomers -> _listCustomers.setValue(listCustomers)));
+
         return _listCustomers;
     }
 
     public LiveData<List<Customer>> getFilterList(String query) {
+        compositeDisposable.add(
+                repository
+                        .getFilterList(query)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(filterList -> _listFilter.setValue(filterList)));
 
-        _listFilter.setValue(repository.getFilterList(query));
         return _listFilter;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        compositeDisposable.dispose();
+        compositeDisposable.clear();
     }
 
     public static class Factory implements ViewModelProvider.Factory {

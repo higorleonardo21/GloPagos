@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/menu_item_details_about"
-        android:title="Informacion" />
+        android:title="Informacion de Cliente" />
 
     <item
         android:id="@+id/menu_item_details_delete"
@@ -21,6 +21,7 @@
     <item
         android:id="@+id/menu_item_details_cash"
         android:icon="@drawable/ic_usd"
+        android:title="Informacion de Monto"
         app:showAsAction="ifRoom" />
 
 </menu>

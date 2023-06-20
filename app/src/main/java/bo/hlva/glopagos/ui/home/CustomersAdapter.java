@@ -1,7 +1,6 @@
 package bo.hlva.glopagos.ui.home;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import bo.hlva.glopagos.data.model.Customer;
@@ -31,24 +30,25 @@ public class CustomersAdapter extends RecyclerView.Adapter<CustomersAdapter.View
     @Override
     public void onBindViewHolder(CustomersAdapter.ViewHolder holder, int position) {
 
-        Customer customer = listCustomers.get(position);
+        Customer customer = listCustomers.get(holder.getAdapterPosition());
         holder.binding.itemName.setText(customer.getName());
         holder.binding.itemLastName.setText(customer.getLastName());
-        
+
         // show number
-        if(customer.getDays().isEmpty()){
+        if (customer.getDays().isEmpty()) {
             holder.binding.itemNumber.setText("0");
-        }
-        else{
+        } else {
             String value = String.valueOf(customer.getDays().size());
             holder.binding.itemNumber.setText(value);
         }
-        
-        // click item
-        holder.binding.getRoot().setOnClickListener(view ->{
-            onItemClickListener.onItemClick(customer);
-        });
 
+        // click item
+        holder.binding
+                .getRoot()
+                .setOnClickListener(
+                        view -> {
+                            onItemClickListener.onItemClick(customer);
+                        });
     }
 
     @Override

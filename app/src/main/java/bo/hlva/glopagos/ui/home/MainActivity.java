@@ -21,7 +21,7 @@ import bo.hlva.glopagos.data.model.Customer;
 import bo.hlva.glopagos.databinding.ActivityMainBinding;
 import bo.hlva.glopagos.ui.AddCustomerActivity;
 import bo.hlva.glopagos.ui.details.DetailsActivity;
-//import com.itsaky.androidide.logsender.LogSender;
+import com.itsaky.androidide.logsender.LogSender;
 
 public class MainActivity extends AppCompatActivity
         implements CustomersAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Remove this line if you don't want AndroidIDE to show this app's logs
-        // LogSender.startLogging(this);
+        LogSender.startLogging(this);
         super.onCreate(savedInstanceState);
         // Inflate and get instance of binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity
                                         (Customer)
                                                 result.getData().getSerializableExtra("customer");
 
-                                customersViewModel.addCustomer(customer);
+                                customersViewModel.insertCustomer(customer);
 
                                 customersViewModel
                                         .getListCustomers()

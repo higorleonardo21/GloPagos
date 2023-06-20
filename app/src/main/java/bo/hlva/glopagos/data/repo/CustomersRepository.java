@@ -3,6 +3,8 @@ package bo.hlva.glopagos.data.repo;
 import android.content.Context;
 import bo.hlva.glopagos.data.database.CustomersDatabase;
 import bo.hlva.glopagos.data.model.Customer;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import java.util.List;
 
 public class CustomersRepository {
@@ -13,27 +15,27 @@ public class CustomersRepository {
         this.database = CustomersDatabase.getInstance(context);
     }
 
-    public void addCustomer(Customer customer) {
-        database.getCustomersDao().insert(customer);
+    public Completable insertCustomer(Customer customer) {
+        return database.getCustomersDao().insert(customer);
     }
-    
-    public void updateCustomer(Customer customer){
-        database.getCustomersDao().update(customer);
+
+    public Completable updateCustomer(Customer customer) {
+        return database.getCustomersDao().update(customer);
     }
-    
-    public void deleteCustomer(Customer customer){
-        database.getCustomersDao().delete(customer);
+
+    public Completable deleteCustomer(Customer customer) {
+        return database.getCustomersDao().delete(customer);
     }
-    
-    public Customer getItemCustomer(String id){
+
+    public Flowable<Customer> getItemCustomer(String id) {
         return database.getCustomersDao().getItemCustomer(id);
     }
 
-    public List<Customer> getListCustomers() {
+    public Flowable<List<Customer>> getListCustomers() {
         return database.getCustomersDao().getListCustomers();
     }
-    
-    public List<Customer> getFilterList(String query){
+
+    public Flowable<List<Customer>> getFilterList(String query) {
         return database.getCustomersDao().getFilterList(query);
     }
 }

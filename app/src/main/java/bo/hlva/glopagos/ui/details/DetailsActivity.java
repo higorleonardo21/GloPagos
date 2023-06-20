@@ -74,6 +74,8 @@ public class DetailsActivity extends AppCompatActivity {
                                     .setTitle(customer.getName() + " " + customer.getLastName());
 
                             ArrayList<Day> list = Utils.getOrganizedList(customer.getDays());
+
+                            binding.recyclerview.setAdapter(customerCardAdapter);
                             customerCardAdapter.submitList(list);
 
                             progressDialog.hide();
@@ -117,7 +119,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         customerCardAdapter = new CustomerCardAdapter(this);
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerview.setAdapter(customerCardAdapter);
 
         // fab
         binding.fab.setOnClickListener(
@@ -151,13 +152,14 @@ public class DetailsActivity extends AppCompatActivity {
                                             20,
                                             Utils.getCurrentDate(),
                                             customer.getDays().size() + 1);
+
                             customer.getDays().add(day);
-                            customerViewModel.updateCustomer(customer);
 
                         } else {
                             break;
                         }
                     }
+                    customerViewModel.updateCustomer(customer);
 
                     ArrayList<Day> list = Utils.getOrganizedList(customer.getDays());
                     customerCardAdapter.submitList(list);
@@ -197,8 +199,7 @@ public class DetailsActivity extends AppCompatActivity {
         builder.setTitle("Informacion de Saldo");
         builder.setMessage(
                 "Monto Total A Cancelar:\n"
-                        + (customer.getAmount()
-                                + MathUtils.calculatePercentage(customer))
+                        + (customer.getAmount() + MathUtils.calculatePercentage(customer))
                         + " bs"
                         + "\n\n"
                         + "Monto Retirado:\n"
@@ -232,7 +233,8 @@ public class DetailsActivity extends AppCompatActivity {
                         + " bs"
                         + "\n\n"
                         + "Porcentaje de Retiro:\n"
-                        + customer.getPercentage() + "%"
+                        + customer.getPercentage()
+                        + "%"
                         + "\n\n"
                         + "Fecha de Retiro:\n"
                         + customer.getDate());

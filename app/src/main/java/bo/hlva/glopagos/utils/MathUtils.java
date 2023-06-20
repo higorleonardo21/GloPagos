@@ -17,4 +17,12 @@ public class MathUtils {
 
         return amount - value;
     }
+
+    public static int getAmountDay(Customer customer) {
+
+        int amount = customer.getAmount() + calculatePercentage(customer);
+        int day = amount / 24;
+
+        return day;
+    }
 }

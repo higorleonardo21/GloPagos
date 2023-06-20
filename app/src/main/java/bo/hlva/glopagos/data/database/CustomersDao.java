@@ -7,27 +7,28 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 import bo.hlva.glopagos.data.model.Customer;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import java.util.List;
 
 @Dao
 public abstract interface CustomersDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Customer customer);
-    
+    Completable insert(Customer customer);
+
     @Update
-    void update(Customer customer);
-    
+    Completable update(Customer customer);
+
     @Delete
-    void delete(Customer customer);
-    
-    
+    Completable delete(Customer customer);
+
     @Query("SELECT * FROM customers WHERE id=:id")
-    Customer getItemCustomer(String id);
+    Flowable<Customer> getItemCustomer(String id);
 
     @Query("SELECT * FROM customers")
-    List<Customer> getListCustomers();
-    
+    Flowable<List<Customer>> getListCustomers();
+
     @Query("SELECT * FROM customers WHERE name LIKE:query")
-    List<Customer> getFilterList(String query);
+    Flowable<List<Customer>> getFilterList(String query);
 }
