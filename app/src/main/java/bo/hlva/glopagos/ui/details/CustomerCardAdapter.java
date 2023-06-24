@@ -1,13 +1,10 @@
 package bo.hlva.glopagos.ui.details;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
-import bo.hlva.glopagos.R;
 import bo.hlva.glopagos.data.model.Day;
 import bo.hlva.glopagos.databinding.ItemCustomerCardBinding;
 import java.util.ArrayList;
@@ -16,13 +13,18 @@ public class CustomerCardAdapter extends RecyclerView.Adapter<CustomerCardAdapte
 
     private Context context;
     private ArrayList<Day> listItems;
-
-    public CustomerCardAdapter(Context context) {
-        this.context = context;
-    }
+    private int amountDay;
     
-    public void submitList(ArrayList<Day> list){
+    private OnDayListener listener;
+
+    public CustomerCardAdapter(Context context,OnDayListener listener) {
+        this.context = context;
+        this.listener = listener;
+    }
+
+    public void submitList(ArrayList<Day> list, int amountDay) {
         this.listItems = list;
+        this.amountDay = amountDay;
         notifyDataSetChanged();
     }
 
@@ -37,11 +39,21 @@ public class CustomerCardAdapter extends RecyclerView.Adapter<CustomerCardAdapte
 
     @Override
     public void onBindViewHolder(CustomerCardAdapter.ViewHolder holder, int position) {
-    
+
         Day day = listItems.get(position);
-        
+
         holder.binding.itemNumber.setText(String.valueOf(day.getNumber()));
         holder.binding.itemDate.setText(day.getDate());
+
+        holder.binding.itemAmount.setText(String.valueOf(day.getAmount()) + "bs");
+
+        if (day.getAmount() >= amountDay) {
+            holder.binding.itemEdit.setVisibility(View.GONE);
+        }
+        
+        holder.binding.itemEdit.setOnClickListener(view ->{
+            listener.onEditDay(holder.getAdapterPosition());
+        });
     }
 
     @Override
@@ -57,5 +69,9 @@ public class CustomerCardAdapter extends RecyclerView.Adapter<CustomerCardAdapte
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+    
+    public interface OnDayListener{
+        void onEditDay(int position);
     }
 }

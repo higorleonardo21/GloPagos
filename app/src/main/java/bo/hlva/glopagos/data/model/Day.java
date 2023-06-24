@@ -4,32 +4,14 @@ import java.io.Serializable;
 
 public class Day implements Serializable {
 
-    private boolean isComplete;
-    private long value;
+    private int amount;
     private String date;
     private int number;
 
-    public Day(boolean isComplete, long value, String date, int number) {
-        this.isComplete = isComplete;
-        this.value = value;
+    public Day(int amount, String date, int number) {
+        this.amount = amount;
         this.date = date;
         this.number = number;
-    }
-
-    public boolean getIsComplete() {
-        return this.isComplete;
-    }
-
-    public void setIsComplete(boolean isComplete) {
-        this.isComplete = isComplete;
-    }
-
-    public long getValue() {
-        return this.value;
-    }
-
-    public void setValue(long value) {
-        this.value = value;
     }
 
     public String getDate() {
@@ -46,5 +28,13 @@ public class Day implements Serializable {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

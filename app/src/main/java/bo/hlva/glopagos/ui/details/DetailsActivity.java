@@ -1,7 +1,6 @@
 package bo.hlva.glopagos.ui.details;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,16 +16,19 @@ import bo.hlva.glopagos.R;
 import bo.hlva.glopagos.data.model.Customer;
 import bo.hlva.glopagos.data.model.Day;
 import bo.hlva.glopagos.databinding.ActivityDetailsBinding;
+import bo.hlva.glopagos.databinding.DialogAddNumberBinding;
 import bo.hlva.glopagos.ui.home.CustomersViewModel;
 import bo.hlva.glopagos.utils.MathUtils;
+import bo.hlva.glopagos.utils.MessageUtils;
 import bo.hlva.glopagos.utils.Utils;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
-// import com.itsaky.androidide.logsender.LogSender;
+import com.itsaky.androidide.logsender.LogSender;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity
+        implements CustomerCardAdapter.OnDayListener {
 
     private ActivityDetailsBinding binding;
     private CustomersViewModel customerViewModel;
@@ -42,7 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // log AndroidIDE
-        //  LogSender.startLogging(this);
+        LogSender.startLogging(this);
         super.onCreate(savedInstanceState);
 
         // inflate views binding
@@ -76,7 +78,7 @@ public class DetailsActivity extends AppCompatActivity {
                             ArrayList<Day> list = Utils.getOrganizedList(customer.getDays());
 
                             binding.recyclerview.setAdapter(customerCardAdapter);
-                            customerCardAdapter.submitList(list);
+                            customerCardAdapter.submitList(list, MathUtils.getAmountDay(customer));
 
                             progressDialog.hide();
                         });
@@ -117,13 +119,44 @@ public class DetailsActivity extends AppCompatActivity {
         // actionbar
         setSupportActionBar(binding.toolbar);
 
-        customerCardAdapter = new CustomerCardAdapter(this);
+        customerCardAdapter = new CustomerCardAdapter(this, this);
         binding.recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
         // fab
         binding.fab.setOnClickListener(
                 view -> {
                     showDialogSelectNumber();
+                });
+
+        binding.fab.setOnLongClickListener(
+                view -> {
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+                    builder.setTitle("Ingrese Cantidad");
+
+                    // inflate view
+                    DialogAddNumberBinding dialogBinding =
+                            DialogAddNumberBinding.inflate(getLayoutInflater());
+                    builder.setView(dialogBinding.getRoot());
+
+                    builder.setPositiveButton(
+                            "Agregar",
+                            (dialog, which) -> {
+                                if (!dialogBinding.edtNumber.getText().toString().isEmpty()) {
+                                    int amount =
+                                            Integer.valueOf(
+                                                    dialogBinding.edtNumber.getText().toString());
+                                    addToDatabase(false, amount);
+                                }
+                            });
+                    builder.setNegativeButton(
+                            "Cancelar",
+                            (dialog, which) -> {
+                                builder.create().dismiss();
+                            });
+
+                    builder.create().show();
+
+                    return true;
                 });
     }
 
@@ -142,27 +175,7 @@ public class DetailsActivity extends AppCompatActivity {
         builder.setPositiveButton(
                 "Agregar",
                 (dialog, which) -> {
-                    for (int i = 1; i <= selectNumberDay; ++i) {
-
-                        if (customer.getDays().size() < 24) {
-
-                            Day day =
-                                    new Day(
-                                            false,
-                                            20,
-                                            Utils.getCurrentDate(),
-                                            customer.getDays().size() + 1);
-
-                            customer.getDays().add(day);
-
-                        } else {
-                            break;
-                        }
-                    }
-                    customerViewModel.updateCustomer(customer);
-
-                    ArrayList<Day> list = Utils.getOrganizedList(customer.getDays());
-                    customerCardAdapter.submitList(list);
+                    addToDatabase(true, 0);
                     builder.create().dismiss();
                 });
         builder.setNegativeButton(
@@ -197,48 +210,93 @@ public class DetailsActivity extends AppCompatActivity {
     private void showDialogInfo() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle("Informacion de Saldo");
-        builder.setMessage(
-                "Monto Total A Cancelar:\n"
-                        + (customer.getAmount() + MathUtils.calculatePercentage(customer))
-                        + " bs"
-                        + "\n\n"
-                        + "Monto Retirado:\n"
-                        + customer.getAmount()
-                        + " bs"
-                        + "\n\n"
-                        + "Monto Pendiente:\n"
-                        + MathUtils.getBalanceDue(customer)
-                        + " bs");
+        builder.setMessage(MessageUtils.infoCustomer(customer));
         builder.show();
     }
 
     private void showDialogDetails() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle("Informacion");
-        builder.setMessage(
-                "Nombre:\n"
-                        + customer.getName()
-                        + "\n\n"
-                        + "Apellidos:\n"
-                        + customer.getLastName()
-                        + "\n\n"
-                        + "Numero C.I:\n"
-                        + customer.getIdNumber()
-                        + "\n\n"
-                        + "Telefono:\n"
-                        + customer.getPhone()
-                        + "\n\n"
-                        + "Monto Retirado:\n"
-                        + customer.getAmount()
-                        + " bs"
-                        + "\n\n"
-                        + "Porcentaje de Retiro:\n"
-                        + customer.getPercentage()
-                        + "%"
-                        + "\n\n"
-                        + "Fecha de Retiro:\n"
-                        + customer.getDate());
-
+        builder.setMessage(MessageUtils.detailsCustomer(customer));
         builder.show();
+    }
+
+    private void addToDatabase(boolean isCompleteDay, int amount) {
+
+        if (isCompleteDay) {
+
+            for (int i = 1; i <= selectNumberDay; ++i) {
+
+                if (customer.getDays().size() < 24) {
+
+                    Day day =
+                            new Day(
+                                    MathUtils.getAmountDay(customer),
+                                    Utils.getCurrentDate(),
+                                    customer.getDays().size() + 1);
+
+                    customer.getDays().add(day);
+
+                } else {
+                    break;
+                }
+            }
+
+        } else {
+            if (amount > 0) {
+
+                Day day = new Day(amount, Utils.getCurrentDate(), customer.getDays().size() + 1);
+
+                customer.getDays().add(day);
+
+            } else {
+                Toast.makeText(this, "Cantidad no valida", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        customerViewModel.updateCustomer(customer);
+
+        ArrayList<Day> list = Utils.getOrganizedList(customer.getDays());
+        customerCardAdapter.submitList(list, MathUtils.getAmountDay(customer));
+    }
+
+    @Override
+    public void onEditDay(int position) {
+
+        Day day = customer.getDays().get(position);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("Ingrese Cantidad");
+
+        // inflate view
+        DialogAddNumberBinding dialogBinding = DialogAddNumberBinding.inflate(getLayoutInflater());
+        builder.setView(dialogBinding.getRoot());
+
+        builder.setPositiveButton(
+                "Agregar",
+                (dialog, which) -> {
+                    if (!dialogBinding.edtNumber.getText().toString().isEmpty()) {
+                        int amount = Integer.valueOf(dialogBinding.edtNumber.getText().toString());
+
+                        if (amount > 0) {
+                            day.setAmount(amount);
+
+                            customerViewModel.updateCustomer(customer);
+
+                            ArrayList<Day> list = Utils.getOrganizedList(customer.getDays());
+                            customerCardAdapter.submitList(list, MathUtils.getAmountDay(customer));
+
+                        } else {
+                            Toast.makeText(this, "Cantidad no valida", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        builder.setNegativeButton(
+                "Cancelar",
+                (dialog, which) -> {
+                    builder.create().dismiss();
+                });
+
+        builder.create().show();
     }
 }
